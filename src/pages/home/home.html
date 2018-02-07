@@ -1,14 +1,101 @@
 <ion-header>
-  <ion-navbar>
+  <ion-navbar color="red">
     <ion-title>
-      Ionic Blank
+      <ion-row>
+        <ion-col col-3>
+            <img ion-icon width="80px" src="../../assets/icon/reddit.ico">
+        </ion-col>
+        <ion-col col-9>
+            <h1>Android @ Reddit</h1>
+        </ion-col>
+      </ion-row>
+      
+      
     </ion-title>
   </ion-navbar>
 </ion-header>
 
 <ion-content padding>
-  The world is your oyster.
-  <p>
-    If you get lost, the <a href="http://ionicframework.com/docs/v2">docs</a> will be your guide.
-  </p>
+
+    <!-- <ul>
+        <li *ngFor="let a of androidNews">{{a.data.is_self}}</li>
+      </ul> -->
+    <ion-card *ngFor="let a of androidNews">
+        
+          <ion-item>
+            <ion-avatar item-start>
+              <img src="../../assets/shared/reddit-user.png">
+            </ion-avatar>
+            <h2>{{a.data.author}}</h2>
+            <p>{{a.data.created*1000| date:'dd-M-yyyy H:mm'}}</p>
+            <p>Domain : <a (click)="openWebpage(a.data.domain)">{{a.data.domain}}</a> </p>
+          </ion-item>
+        
+          <!-- <img *ngIf="a.data.thumbnail_height" [src]=a.data.imageSource> -->
+        
+          <ion-card-content>
+            <ion-row>
+              <ion-col class="heading">
+                  <p>{{a.data.title}}</p>
+              </ion-col>
+              <ion-col col-6 *ngIf="a.data.thumbnail_height">
+                  <img  [src]=a.data.thumbnail>
+              </ion-col>
+            </ion-row >
+            
+            <div class="content" *ngIf="a.data.selftext">
+                <hr>
+                <p>{{a.data.selftext}}</p>
+            </div>
+            
+           
+            
+          </ion-card-content>
+          <hr>
+          <ion-row>
+            <!-- <ion-col>
+              <button ion-button icon-left clear small>
+                <ion-icon name="thumbs-up"></ion-icon>
+                <div>12 Likes</div>
+              </button>
+            </ion-col> -->
+            <!-- <ion-col>
+              <button ion-button icon-left clear small>
+                <ion-icon name="text"></ion-icon>
+                <div>{{a.data.num_comments}} Comments</div>
+              </button>
+            </ion-col> -->
+            <ion-col center text-center>
+                <button ion-button icon-left clear small>
+                    <ion-icon name="text"></ion-icon>
+                    <div>{{a.data.num_comments}} Comments</div> 
+                </button>
+            </ion-col>
+          </ion-row>
+        
+        </ion-card>
+
+
+
+
+  <!-- <ul>
+    <li *ngFor="let a of androidNews">{{a.data.author}}</li>
+  </ul> -->
+  <ion-refresher (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content
+      pullingIcon="arrow-dropdown"
+      pullingText="Pull to refresh"
+      refreshingSpinner="circles"
+      refreshingText="Refreshing...">
+    </ion-refresher-content>
+  </ion-refresher>
+
+  <ion-infinite-scroll (ionInfinite)="doInfinite($event)">
+      <ion-infinite-scroll-content
+        loadingSpinner="bubbles"
+        loadingText="Loading more data...">
+      </ion-infinite-scroll-content>
+    </ion-infinite-scroll>
+
+
 </ion-content>

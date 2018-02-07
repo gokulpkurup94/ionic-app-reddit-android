@@ -6,6 +6,9 @@ import { StatusBar } from '@ionic-native/status-bar';
 
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
+import { ReddittApiService } from '../shared/reddit.api.service';
+import { HttpModule } from '@angular/http';
+import { InAppBrowser } from '@ionic-native/in-app-browser';
 
 @NgModule({
   declarations: [
@@ -14,6 +17,7 @@ import { HomePage } from '../pages/home/home';
   ],
   imports: [
     BrowserModule,
+    HttpModule,
     IonicModule.forRoot(MyApp)
   ],
   bootstrap: [IonicApp],
@@ -23,7 +27,9 @@ import { HomePage } from '../pages/home/home';
   ],
   providers: [
     StatusBar,
+    InAppBrowser,
     SplashScreen,
+    ReddittApiService,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })

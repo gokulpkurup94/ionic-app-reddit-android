@@ -16,63 +16,49 @@ export class HomePage {
               private toastCtrl: ToastController) {
                 
         this.limit = 5;
-        this.redditApiService.getNews("after=null").subscribe(data => {
+        this.redditApiService.getNews().subscribe(data => {
+          console.log(data);
           this.androidNews=data.data.children;
         });
   }
 
 
-  doRefresh(refresher) {
-    let oldNewsIndex: string;
-    oldNewsIndex=this.androidNews[0].data.name;
-    this.redditApiService.getNews("after=null").subscribe(data => {
-      this.androidNews=data.data.children;
-      if(oldNewsIndex!=this.androidNews[0].data.name){
-        setTimeout(() => {
-          refresher.complete();
+  doInfinite(infiniteScroll){
+     var idOfLast: string =this.androidNews[this.androidNews.length-1].data.name;
+    let data={'key':'after', 'value':idOfLast};
+    this.redditApiService.getNews(data).subscribe(data => {
+      this.androidNews=this.androidNews.concat(data.data.children);
+      infiniteScroll.complete();
+         
+      
+    });
+  }
 
-          let toast = this.toastCtrl.create({
-            message: 'Loaded new stories',
-            duration: 2000,
-            position: 'bottom'
-          });
-        
-          toast.onDidDismiss(() => {});
-        
-          toast.present();
-        }, 1000);
-      }
-      else{
-        setTimeout(() => {
-          refresher.complete();
+  doRefresh(refresher){
+    var idOfFirst: string =this.androidNews[0].data.name;
+   let data={'key':'before', 'value':idOfFirst};
+   this.redditApiService.getNews(data).subscribe(data => {
+     if(data.data.children==0){
+      refresher.complete();
         
           let toast = this.toastCtrl.create({
             message: 'No new stories',
             duration: 2000,
             position: 'bottom'
           });
-        
-          toast.onDidDismiss(() => {});
-        
           toast.present();
-        }, 1000);
-        }
-    });
-
-
-    setTimeout(() => {
+        
+     }
+     else{
+      this.androidNews=data.data.children.concat(this.androidNews);
       refresher.complete();
-    }, 1000);
-  }
-
-  doInfinite(infiniteScroll){
-    this.redditApiService.getNews("after="+this.androidNews[this.androidNews.length-1].data.name).subscribe(data => {
-      for(let i = 0; i < this.limit; i++){
-        this.androidNews.push(data.data.children[i]); 
-      }
-    });
-      setTimeout(() => {
-        infiniteScroll.complete();
-      }, 5000);
-  }
+      let toast = this.toastCtrl.create({
+        message: 'Loaded new stories',
+        duration: 2000,
+        position: 'bottom'
+      });
+      toast.present();
+     } 
+   });
+ }
 }

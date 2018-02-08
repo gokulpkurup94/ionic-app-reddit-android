@@ -16,10 +16,16 @@
 </ion-header>
 
 <ion-content padding>
+    <ion-refresher (ionRefresh)="doRefresh($event)">
+        <ion-refresher-content
+          pullingIcon="arrow-dropdown"
+          pullingText="Pull to refresh"
+          refreshingSpinner="circles"
+          refreshingText="Refreshing...">
+        </ion-refresher-content>
+      </ion-refresher>
 
-    <!-- <ul>
-        <li *ngFor="let a of androidNews">{{a.data.is_self}}</li>
-      </ul> -->
+ 
     <ion-card *ngFor="let a of androidNews">
         
           <ion-item>
@@ -30,8 +36,7 @@
             <p>{{a.data.created*1000| date:'dd-M-yyyy H:mm'}}</p>
             <p>Domain : <a (click)="openWebpage(a.data.domain)">{{a.data.domain}}</a> </p>
           </ion-item>
-        
-          <!-- <img *ngIf="a.data.thumbnail_height" [src]=a.data.imageSource> -->
+
         
           <ion-card-content>
             <ion-row>
@@ -53,18 +58,7 @@
           </ion-card-content>
           <hr>
           <ion-row>
-            <!-- <ion-col>
-              <button ion-button icon-left clear small>
-                <ion-icon name="thumbs-up"></ion-icon>
-                <div>12 Likes</div>
-              </button>
-            </ion-col> -->
-            <!-- <ion-col>
-              <button ion-button icon-left clear small>
-                <ion-icon name="text"></ion-icon>
-                <div>{{a.data.num_comments}} Comments</div>
-              </button>
-            </ion-col> -->
+          
             <ion-col center text-center>
                 <button ion-button icon-left clear small>
                     <ion-icon name="text"></ion-icon>
@@ -81,14 +75,7 @@
   <!-- <ul>
     <li *ngFor="let a of androidNews">{{a.data.author}}</li>
   </ul> -->
-  <ion-refresher (ionRefresh)="doRefresh($event)">
-    <ion-refresher-content
-      pullingIcon="arrow-dropdown"
-      pullingText="Pull to refresh"
-      refreshingSpinner="circles"
-      refreshingText="Refreshing...">
-    </ion-refresher-content>
-  </ion-refresher>
+ 
 
   <ion-infinite-scroll (ionInfinite)="doInfinite($event)">
       <ion-infinite-scroll-content
